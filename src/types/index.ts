@@ -3,4 +3,5 @@ export type videoType = {
   imageUrl: string;
   videoUrl: string;
   title: string;
+  userId: number;
 };

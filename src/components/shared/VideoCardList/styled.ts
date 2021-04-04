@@ -10,3 +10,10 @@ export const List = styled.div`
   display: flex;
   flex-wrap: wrap;
 `;
+
+export const Title = styled.h2`
+  font-size: 16px;
+  text-align: center;
+  margin: 10px 0px;
+  font-weight: 700;
+`;

@@ -12,15 +12,11 @@ import NextLink from "next/link";
 
 type Props = {
   searchValue: string;
-  changeSearchValue: (value: string) => void;
+  setSearchValue: (value: string) => void;
   onFindClick: (userName: string) => void;
 };
 
-const SearchHeader: React.FC<Props> = ({
-  searchValue,
-  changeSearchValue,
-  onFindClick,
-}) => {
+const SearchHeader: React.FC<Props> = ({ searchValue, setSearchValue, onFindClick }) => {
   return (
     <Wrapper>
       <Container>
@@ -28,7 +24,7 @@ const SearchHeader: React.FC<Props> = ({
         <SearchInput
           value={searchValue}
           onChange={(e) => {
-            changeSearchValue(e.target.value);
+            setSearchValue(e.target.value);
           }}
           placeholder="Название канала"
           type="text"
@@ -36,7 +32,7 @@ const SearchHeader: React.FC<Props> = ({
         <FindButton
           onClick={() => {
             onFindClick(searchValue);
-            changeSearchValue("");
+            setSearchValue("");
           }}
         >
           Найти

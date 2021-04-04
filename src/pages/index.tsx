@@ -7,9 +7,6 @@ import { setThumbUrl } from "../utils/setThumbUrl";
 
 export default function Home() {
   const [filter, setFilter] = useState("");
-  const changeFilterValue = (value: string) => {
-    setFilter(value);
-  };
 
   const [videos, setVideos] = useState<videoType[]>([]);
   const fetchVideos = async (userName: string) => {
@@ -21,11 +18,12 @@ export default function Home() {
 
         const { data: videosData } = await api.get(`/videos?user_id=${streamerId}`);
         setVideos(
-          videosData.data.map((v) => ({
-            id: v.id,
+          videosData.data.map((v: any) => ({
+            id: parseInt(v.id),
             imageUrl: setThumbUrl(v.thumbnail_url, 200, 200),
             videoUrl: v.url,
             title: v.title,
+            userId: parseInt(v.user_id),
           }))
         );
       }
@@ -36,10 +34,10 @@ export default function Home() {
     <>
       <SearchHeader
         searchValue={filter}
-        changeSearchValue={changeFilterValue}
+        setSearchValue={setFilter}
         onFindClick={fetchVideos}
       />
-      <VideoCardList videos={videos} />
+      <VideoCardList title="Все видео" videos={videos} />
     </>
   );
 }
