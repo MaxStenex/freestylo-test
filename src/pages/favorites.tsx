@@ -11,6 +11,17 @@ export default function Favorites() {
   const [videos, setVideos] = useState<videoType[]>([]);
   const [filteredVideos, setFilteredVideos] = useState<videoType[]>([]);
 
+  const filterVideos = async (filter: string) => {
+    if (!filter) {
+      return setFilteredVideos([...videos]);
+    }
+
+    const { data } = await api.get(`/search/channels?query=${filter}&first=1`);
+
+    const streamerId = parseInt(data.data[0].id);
+    return setFilteredVideos(videos.filter((v) => v.userId === streamerId));
+  };
+
   useEffect(() => {
     const storagedVideoIds: number[] | null = getStoragedVideoIds();
     const videoIdSet = new Set(storagedVideoIds);
@@ -29,6 +40,7 @@ export default function Favorites() {
             imageUrl: setThumbUrl(v.thumbnail_url, 200, 200),
             videoUrl: v.url,
             title: v.title,
+            userId: parseInt(v.user_id),
           }))
         );
       } catch (error) {}
@@ -38,25 +50,15 @@ export default function Favorites() {
   }, []);
 
   useEffect(() => {
-    const filterVideos = async (filter: string) => {
-      if (!filter) {
-        return setFilteredVideos([...videos]);
-      }
-
-      const { data } = await api.get(`/search/channels?query=${filter}&first=1`);
-      const streamerId = data.data[0].id;
-      return setFilteredVideos(videos.filter((v) => v.userId === streamerId));
-    };
-
     filterVideos(filter);
-  }, [filter, videos]);
+  }, [videos]);
 
   return (
     <>
       <SearchHeader
         searchValue={filter}
         setSearchValue={setFilter}
-        onFindClick={() => {}}
+        onFindClick={() => filterVideos(filter)}
       />
       <VideoCardList title="Избранное" videos={filteredVideos} />
     </>
